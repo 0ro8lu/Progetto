@@ -1,8 +1,7 @@
+
 public class Medico extends Persona {
-    Medico(int eta)
+    Medico()
     {
-        super(eta,impiego.MEDICO);
-
+        super(impiego.MEDICO);
     }
-
 }

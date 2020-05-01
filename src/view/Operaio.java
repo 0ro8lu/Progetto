@@ -1,7 +1,6 @@
 public class Operaio extends Persona {
-
-    Operaio(int eta)
+    Operaio()
     {
-        super(eta,impiego.OPERAIO);
+        super(impiego.OPERAIO);
     }
 }

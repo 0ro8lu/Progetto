@@ -1,7 +1,6 @@
 public class Disoccupato extends Persona {
-
-    Disoccupato(int eta)
+    Disoccupato()
     {
-        super(eta,impiego.DISOCCUPATO);
+        super(impiego.DISOCCUPATO);
     }
 }
