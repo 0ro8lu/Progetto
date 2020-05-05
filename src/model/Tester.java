@@ -1,3 +1,5 @@
+package model;
+
 public class Tester {
     public static void main(String[] args) {
         Popolazione p= new Popolazione(100,10,3000);
