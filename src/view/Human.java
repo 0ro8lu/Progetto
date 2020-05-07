@@ -10,6 +10,7 @@ public class Human extends Component {
 
         m_X = x;
         m_Y = y;
+        m_Color = Color.GREEN;
     }
 
     public float getHumanX() { return m_X; }
@@ -22,10 +23,10 @@ public class Human extends Component {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.setColor(Color.red);
+        g.setColor(m_Color);
         g.fillRect((int)m_X, (int)m_Y, 5, 5);
     }
 
     private float m_X, m_Y;
-
+    private Color m_Color;
 }
