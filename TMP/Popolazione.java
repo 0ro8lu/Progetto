@@ -3,14 +3,6 @@ package model;
 import java.util.ArrayList;
 
 public class Popolazione {
-    protected int c_tampone;
-    protected int ris;
-    protected int numero_pop;
-    ArrayList<Persona> array_popolazione = new ArrayList<>();
-    protected int num_medici;
-    protected int num_operai;
-    private int num_disoccupati;
-
     Popolazione(int num, int costo_tampone, int risorse){
         // creazione array popolazione
         set_numero_pop(num);
@@ -42,20 +34,9 @@ public class Popolazione {
         System.out.println("ho creato " +num_medici + " medici");
         System.out.println("ho creato " +num_operai + " operai");
         System.out.println("ho creato " +num_disoccupati + " disoccupati");
-        Medico med;
-        Operaio op;
-        Disoccupato dip;
-        for (int i=0;i<num_medici;i++){
-            med=new Medico();
-            array_popolazione.add(med);
-        }
-        for (int i=0;i<num_operai;i++){
-            op=new Operaio();
-            array_popolazione.add(op);
-        }
-        for (int i=0;i<num_disoccupati;i++){
-            dip=new Disoccupato();
-            array_popolazione.add(dip);
-        }
+
+        for (int i=0;i<num_medici;i++)      { array_popolazione.add(new Medico()); }
+        for (int i=0;i<num_operai;i++)      { array_popolazione.add(new Operaio()); }
+        for (int i=0;i<num_disoccupati;i++) { array_popolazione.add(new Disoccupato()); }
     }
 }

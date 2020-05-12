@@ -24,6 +24,7 @@ public class Window {
 
         m_Window.add(m_Canvas);
         m_Window.setVisible(true);
+        m_Window.setResizable(false);
 
         m_Window.addWindowListener(new java.awt.event.WindowAdapter()
         {
@@ -41,7 +42,10 @@ public class Window {
         m_Canvas.repaint();
     }
 
-    private int m_Width, m_Height;
+    public static int getWidth() { return m_Width; }
+    public static int getHeight() { return m_Height; }
+
+    private static int m_Width, m_Height;
     private String m_Title;
 
     private JFrame m_Window;

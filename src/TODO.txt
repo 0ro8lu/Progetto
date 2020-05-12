@@ -1,0 +1,1 @@
+un thread specifico per la grafica.

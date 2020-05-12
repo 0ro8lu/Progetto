@@ -12,7 +12,7 @@ public class GameView
 
     public void Init()
     {
-        m_Window = new Window(800, 600, "Hello World");
+        m_Window = new Window(1920, 1080, "Hello World");
     }
 
     public void Draw()

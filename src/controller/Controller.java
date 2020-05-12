@@ -1,6 +1,6 @@
 package controller;
 
-import model.GestorePersone;
+import model.GestorePopolazione;
 import view.*;
 import eventi.GestoreEventi;
 
@@ -15,7 +15,7 @@ public class Controller {
     {
         m_GestoreEventi = new GestoreEventi();
         m_View = new GameView();
-        m_GestorePersone = new GestorePersone();
+        m_GestorePopolazione = new GestorePopolazione(1000, 5, 1000);
         Loop();
     }
 
@@ -39,11 +39,11 @@ public class Controller {
                 GameCanvas.setHuman(test, 0);
                  */
 
-                m_GestorePersone.Update();
+                m_GestorePopolazione.Update();
 
                 lag -= UPS;
             }
-            m_GestorePersone.Disegna();
+            m_GestorePopolazione.Disegna();
             m_View.Draw();
         }
     }
@@ -51,7 +51,7 @@ public class Controller {
     // Enra x Sleepermane - getaway
 
     private GameView m_View;
-    private GestorePersone m_GestorePersone;
+    private GestorePopolazione m_GestorePopolazione;
     public static GestoreEventi m_GestoreEventi;
     private final double FPS = 1000/60;
     private final double UPS = 1000/90;

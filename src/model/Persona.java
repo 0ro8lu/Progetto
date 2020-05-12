@@ -1,6 +1,9 @@
 package model;
 
+import view.Window;
+
 import java.util.Random;
+import java.lang.Math;
 
 enum impiego
 {
@@ -30,51 +33,60 @@ public class Persona
    */
 
     protected boolean vivo = true;
+
     protected float x_Pos = 0.0f;
     protected float y_Pos = 0.0f; //posizione della persone
+    private int m_Punto[];
+    private boolean m_UltimoAsse; //Quando false l'ultimo movimento e' stato fatto sull'asse delle ascisse, altrimenti su quello delle ordinate =D
     protected boolean movimento = true;
 
-    public static int randInt(int min, int max)
+    Persona(impiego v)
+    {
+        this.individuo = v;
+
+        stato_salute = 0;
+        infettivita = randInt(10, 70);
+
+        x_Pos = (float) randInt(10, Window.getWidth() - 10);
+        y_Pos = (float) randInt(10, Window.getHeight() - 10);
+
+        m_Punto = new int[2];
+        m_Punto[0] = randInt(10,  Window.getWidth() - 10);
+        m_Punto[1] = randInt(10, Window.getHeight() - 10);
+
+        if (randInt(0, 1) == 0)
+        {
+            m_UltimoAsse = false;
+        } else
+        {
+            m_UltimoAsse = true;
+        }
+    }
+
+    protected int randInt(int min, int max)
     {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
 
-    Persona(impiego v)
+    public float getX()
     {
-        this.individuo = v;
-        set_eta();
-        set_Letalita(eta);
-        set_velocita(v);
-
-        ///TODO: Fare che ogni persona venga creata con pos random
-        x_Pos = (float)randInt(5, 300);
-        y_Pos = (float)randInt(5, 300);
-
+        return x_Pos;
     }
 
-    public float getX() { return x_Pos; }
-    public float getY() { return y_Pos; }
-
-    void set_eta()
+    public float getY()
     {
-        if (this.individuo == impiego.MEDICO)
-        {
-            eta = randInt(35, 65);
-        }
-        if (this.individuo == impiego.OPERAIO)
-        {
-            eta = randInt(18, 63);
-        }
-        if (this.individuo == impiego.DISOCCUPATO)
-        {
-            eta = randInt(1, 100);
-        }
+        return y_Pos;
+    }
+
+    public void setStato_salute(int stato_salute)
+    {
+        this.stato_salute = stato_salute;
     }
 
     // la letalita e' stata decisa,basandoci sulle fonti provenienti dal sito Source: Chinese Center for Disease Control and Prevention
-    void set_Letalita(int eta)
+    protected void set_Letalita(int eta)
     {
         if (eta <= 50)
         {
@@ -94,32 +106,56 @@ public class Persona
         }
     }
 
-    void setStato_salute(int n)
-    {
-        stato_salute = n;
-
-    }
-
-    ///TODO: Talk about this.
-    void set_velocita(impiego t)
-    {
-        if (t == impiego.MEDICO)
-        {
-            velocita = 20;
-        }
-        if (t == impiego.DISOCCUPATO)
-        {
-            velocita = 5;
-        }
-        if (t == impiego.OPERAIO)
-        {
-            velocita = 15;
-        }
-    }
-
+    ///TODO: Rendere astratto
+    ///TODO: Aggiungere controllo per vedere se persona e' in movimento
     void Update()
     {
-        x_Pos += 0.2f;
+
+        System.out.println("(X: " + m_Punto[0] + ", Y: " + m_Punto[1] + ")");
+        System.out.println("Persona X:" + x_Pos + ", Y: " + y_Pos + ")");
+
+        if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
+        {
+            m_Punto[0] = randInt(10, Window.getWidth() - 10);
+            m_Punto[1] = randInt(10, Window.getHeight() - 10);
+        }
+        if (Math.abs(m_Punto[0] - x_Pos) != 0 && Math.abs(m_Punto[1] - y_Pos) != 0)
+        {
+            if (m_UltimoAsse == true)
+            {
+                if (m_Punto[0] - x_Pos < 0)
+                    x_Pos = x_Pos - 0.5f;
+                else
+                    x_Pos = x_Pos + 0.5f;
+
+                m_UltimoAsse = false;
+            } else
+            {
+                if (m_Punto[1] - y_Pos < 0)
+                    y_Pos = y_Pos - 0.5f;
+                else
+                    y_Pos = y_Pos + 0.5f;
+
+                m_UltimoAsse = true;
+            }
+            return;
+        }
+
+        if ((int) x_Pos != m_Punto[0])
+        {
+            if (m_Punto[0] - x_Pos < 0)
+                x_Pos = x_Pos - 0.5f;
+            else
+                x_Pos = x_Pos + 0.5f;
+        }
+
+        if ((int) y_Pos != m_Punto[1])
+        {
+            if (m_Punto[1] - y_Pos < 0)
+                y_Pos = y_Pos - 0.5f;
+            else
+                y_Pos = y_Pos + 0.5f;
+        }
     }
 }
 
