@@ -2,6 +2,7 @@ package view;
 
 import eventi.*;
 import model.Persona;
+import model.Stato_salute;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +46,23 @@ public class GameCanvas extends JPanel
 
         for(Persona persona : m_ListaPersona)
         {
+            switch (persona.get_stato_salute()){
+                case SANO:
+                    g.setColor(Color.green);
+                    break;
+                case GUARITO:
+                    g.setColor(Color.blue);
+                    break;
+                case CONTAGIATO:
+                    g.setColor(Color.red);
+                    break;
+                case ASINTOMATICO:
+                    g.setColor(Color.yellow);
+                    break;
+                case MORTO:
+                    g.setColor(Color.black);
+                    break;
+            }
             g.fillRect((int)persona.getX(), (int)persona.getY(), 3, 3);
         }
     }

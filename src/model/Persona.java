@@ -9,6 +9,8 @@ enum impiego
 {
     MEDICO, OPERAIO, DISOCCUPATO
 }
+
+
 //disoccupato: chi è in pensione, chi non lavora, chi ha un lavoro e viene fermato durante l'epidemia
 //operaio: chi lavora anche durante l'epidemia
 //medico: lavora sempre
@@ -22,7 +24,7 @@ public class Persona
     protected float letalita = 0;//probabilita' malato sintomatico
     protected int durata = 0;// numero di giorni tra contagio e guarigione
     protected int sintomaticita = 0;//probabilità di sviluppare sintomi
-    protected int stato_salute = 0;
+    Stato_salute stato_salute;
     protected int velocita = 0;
     /* Gli stati sono:
     0=sano(verde)
@@ -44,7 +46,7 @@ public class Persona
     {
         this.individuo = v;
 
-        stato_salute = 0;
+        stato_salute = model.Stato_salute.SANO;
         infettivita = randInt(10, 70);
 
         x_Pos = (float) randInt(10, Window.getWidth() - 10);
@@ -80,10 +82,17 @@ public class Persona
         return y_Pos;
     }
 
-    public void setStato_salute(int stato_salute)
-    {
-        this.stato_salute = stato_salute;
-    }
+    public void set_sano() { this.stato_salute = model.Stato_salute.SANO; }
+
+    public void set_guarito() { this.stato_salute = model.Stato_salute.GUARITO; }
+
+    public void set_contagiato() { this.stato_salute = model.Stato_salute.CONTAGIATO; }
+
+    public void set_asintomatico() { this.stato_salute = model.Stato_salute.ASINTOMATICO; }
+
+    public void set_morto() { this.stato_salute = model.Stato_salute.MORTO; }
+
+    public Stato_salute get_stato_salute() {return this.stato_salute;}
 
     // la letalita e' stata decisa,basandoci sulle fonti provenienti dal sito Source: Chinese Center for Disease Control and Prevention
     protected void set_Letalita(int eta)
@@ -111,8 +120,8 @@ public class Persona
     void Update()
     {
 
-        System.out.println("(X: " + m_Punto[0] + ", Y: " + m_Punto[1] + ")");
-        System.out.println("Persona X:" + x_Pos + ", Y: " + y_Pos + ")");
+        //System.out.println("(X: " + m_Punto[0] + ", Y: " + m_Punto[1] + ")");
+        //System.out.println("Persona X:" + x_Pos + ", Y: " + y_Pos + ")");
 
         if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
         {
