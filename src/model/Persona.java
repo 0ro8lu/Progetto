@@ -10,7 +10,6 @@ enum impiego
     MEDICO, OPERAIO, DISOCCUPATO
 }
 
-
 //disoccupato: chi è in pensione, chi non lavora, chi ha un lavoro e viene fermato durante l'epidemia
 //operaio: chi lavora anche durante l'epidemia
 //medico: lavora sempre
@@ -46,15 +45,16 @@ public class Persona
     {
         this.individuo = v;
 
-        stato_salute = model.Stato_salute.SANO;
-        infettivita = randInt(10, 70);
+        stato_salute  = model.Stato_salute.SANO;
+        infettivita   = randInt(10, 70);
+        sintomaticita = randInt(40, 70);
 
-        x_Pos = (float) randInt(10, Window.getWidth() - 10);
-        y_Pos = (float) randInt(10, Window.getHeight() - 10);
+        x_Pos = (float) randInt(10, Window.getWidth() - 15);
+        y_Pos = (float) randInt(10, Window.getHeight() - 15);
 
         m_Punto = new int[2];
-        m_Punto[0] = randInt(10,  Window.getWidth() - 10);
-        m_Punto[1] = randInt(10, Window.getHeight() - 10);
+        m_Punto[0] = randInt(10,  Window.getWidth() - 15);
+        m_Punto[1] = randInt(10,  Window.getHeight() - 15);
 
         if (randInt(0, 1) == 0)
         {
@@ -72,24 +72,14 @@ public class Persona
         return randomNum;
     }
 
-    public float getX()
-    {
-        return x_Pos;
-    }
-
-    public float getY()
-    {
-        return y_Pos;
-    }
+    public float getX()        { return x_Pos; }
+    public float getY()        { return y_Pos; }
+    public int   getVelocita() { return velocita; }
 
     public void set_sano() { this.stato_salute = model.Stato_salute.SANO; }
-
     public void set_guarito() { this.stato_salute = model.Stato_salute.GUARITO; }
-
     public void set_contagiato() { this.stato_salute = model.Stato_salute.CONTAGIATO; }
-
     public void set_asintomatico() { this.stato_salute = model.Stato_salute.ASINTOMATICO; }
-
     public void set_morto() { this.stato_salute = model.Stato_salute.MORTO; }
 
     public Stato_salute get_stato_salute() {return this.stato_salute;}
@@ -119,14 +109,10 @@ public class Persona
     ///TODO: Aggiungere controllo per vedere se persona e' in movimento
     void Update()
     {
-
-        //System.out.println("(X: " + m_Punto[0] + ", Y: " + m_Punto[1] + ")");
-        //System.out.println("Persona X:" + x_Pos + ", Y: " + y_Pos + ")");
-
         if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
         {
-            m_Punto[0] = randInt(10, Window.getWidth() - 10);
-            m_Punto[1] = randInt(10, Window.getHeight() - 10);
+            m_Punto[0] = randInt(10, Window.getWidth() - 15);
+            m_Punto[1] = randInt(10, Window.getHeight() - 15);
         }
         if (Math.abs(m_Punto[0] - x_Pos) != 0 && Math.abs(m_Punto[1] - y_Pos) != 0)
         {

@@ -9,6 +9,5 @@ public class Tester {
             System.out.print(p.array_popolazione.get(i).individuo);
             System.out.println();
         }
-
     }
 }

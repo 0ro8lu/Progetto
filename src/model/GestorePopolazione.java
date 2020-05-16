@@ -2,6 +2,9 @@ package model;
 
 import controller.Controller;
 import eventi.EventoDisegna;
+import eventi.EventoNuovoGiorno;
+import eventi.IGestoreEventi;
+import eventi.Evento;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,6 +14,8 @@ public class GestorePopolazione
 
     public GestorePopolazione(int numero_Persone, int costo_Tampone, int numero_Risorse)
     {
+        IGestoreEventi.Get().AggiungiDelegato(evt -> { DayUpdate(evt); }, 1);
+
         array_popolazione = new ArrayList<>();
 
         this.numero_pop = numero_Persone;
@@ -33,7 +38,36 @@ public class GestorePopolazione
         for (int i = 0; i < num_operai; i++)      { array_popolazione.add(new Operaio()); }
         for (int i = 0; i < num_disoccupati; i++) { array_popolazione.add(new Disoccupato()); }
         indice_primo = randInt(0, array_popolazione.size()-1);
-        array_popolazione.get(indice_primo).set_contagiato();
+        array_popolazione.get(indice_primo).set_asintomatico();
+
+        for(Persona persona : array_popolazione)
+        {
+            System.out.print(persona.eta + " ");
+            System.out.print(persona.individuo);
+            System.out.println();
+        }
+    }
+
+    public void DayUpdate(Evento evento)
+    {
+        EventoNuovoGiorno eventoNuovoGiorno = (EventoNuovoGiorno)evento;
+        System.out.println("Giorno " + eventoNuovoGiorno.getDayCount());
+
+        somma_velocita = 0;
+        for(Persona persona : array_popolazione)
+        {
+            if(persona.stato_salute == Stato_salute.ASINTOMATICO)
+                somma_velocita += persona.getVelocita();
+        }
+
+        System.out.println(somma_velocita);
+
+        Infetta();
+    }
+
+    public void Infetta()
+    {
+
     }
 
     public void Update()
@@ -42,7 +76,6 @@ public class GestorePopolazione
         {
             ///TODO: Maybe implement this inside each different person, and have them do different things based on their job.
             persona.Update();
-
             ///TODO: Maybe implement a check for dead people and remove them from the list, or we renderer the person's update method null.
         }
     }
@@ -60,8 +93,6 @@ public class GestorePopolazione
         Controller.m_GestoreEventi.AttivaEvento(evento);
     }
 
-
-
     private int indice_primo;
     private int c_tampone;
     private int ris;
@@ -70,4 +101,5 @@ public class GestorePopolazione
     private int num_medici;
     private int num_operai;
     private int num_disoccupati;
+    private int somma_velocita;
 }

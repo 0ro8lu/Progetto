@@ -15,24 +15,7 @@ public class GameCanvas extends JPanel
         m_ListaPersona = new ArrayList<>();
 
         IGestoreEventi.Get().AggiungiDelegato(evt -> { paintDelegate(evt); }, 0);
-
     }
-
-    /*
-    public static void addHuman(Human h)
-    {
-        m_HumanList.add(h);
-    }
-    public static void setHuman(Human h, int index)
-    {
-        m_HumanList.set(index, h);
-    }
-    public static Human getHuman(int index)
-    {
-        return m_HumanList.get(index);
-    }
-
-     */
 
     public void paintDelegate(Evento e)
     {
@@ -43,6 +26,7 @@ public class GameCanvas extends JPanel
     public void paint(Graphics g)
     {
         super.paint(g);
+        super.setBackground(Color.black);
 
         for(Persona persona : m_ListaPersona)
         {
@@ -68,5 +52,4 @@ public class GameCanvas extends JPanel
     }
 
     private ArrayList<Persona> m_ListaPersona;
-    //private static ArrayList<Human> m_HumanList;
 }
