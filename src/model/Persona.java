@@ -19,7 +19,6 @@ public class Persona
 {
     impiego individuo;
     protected int eta = 0;
-    protected int infettivita = 0; //probabilita' di essere infettato
     protected float letalita = 0;//probabilita' malato sintomatico
     protected int durata = 0;// numero di giorni tra contagio e guarigione
     protected int sintomaticita = 0;//probabilità di sviluppare sintomi
@@ -34,6 +33,8 @@ public class Persona
    */
 
     protected boolean vivo = true;
+    protected boolean asintomatico = false;
+
 
     protected float x_Pos = 0.0f;
     protected float y_Pos = 0.0f; //posizione della persone
@@ -45,16 +46,15 @@ public class Persona
     {
         this.individuo = v;
 
-        stato_salute  = model.Stato_salute.SANO;
-        infettivita   = randInt(10, 70);
+        stato_salute = model.Stato_salute.SANO;
         sintomaticita = randInt(40, 70);
 
         x_Pos = (float) randInt(10, Window.getWidth() - 15);
         y_Pos = (float) randInt(10, Window.getHeight() - 15);
 
         m_Punto = new int[2];
-        m_Punto[0] = randInt(10,  Window.getWidth() - 15);
-        m_Punto[1] = randInt(10,  Window.getHeight() - 15);
+        m_Punto[0] = randInt(10, Window.getWidth() - 15);
+        m_Punto[1] = randInt(10, Window.getHeight() - 15);
 
         if (randInt(0, 1) == 0)
         {
@@ -72,17 +72,66 @@ public class Persona
         return randomNum;
     }
 
-    public float getX()        { return x_Pos; }
-    public float getY()        { return y_Pos; }
-    public int   getVelocita() { return velocita; }
+    public float getX()
+    {
+        return x_Pos;
+    }
 
-    public void set_sano() { this.stato_salute = model.Stato_salute.SANO; }
-    public void set_guarito() { this.stato_salute = model.Stato_salute.GUARITO; }
-    public void set_contagiato() { this.stato_salute = model.Stato_salute.CONTAGIATO; }
-    public void set_asintomatico() { this.stato_salute = model.Stato_salute.ASINTOMATICO; }
-    public void set_morto() { this.stato_salute = model.Stato_salute.MORTO; }
+    public float getY()
+    {
+        return y_Pos;
+    }
 
-    public Stato_salute get_stato_salute() {return this.stato_salute;}
+    public int getVelocita()
+    {
+        return velocita;
+    }
+
+    public boolean getIsSintomatico()
+    {
+        return asintomatico;
+    }
+
+    public int getSintomaticita()
+    {
+        return sintomaticita;
+    }
+
+    public void set_sano()
+    {
+        this.stato_salute = model.Stato_salute.SANO;
+    }
+
+    public void set_guarito()
+    {
+        this.stato_salute = model.Stato_salute.GUARITO;
+    }
+
+    public void set_contagiato()
+    {
+        this.stato_salute = model.Stato_salute.CONTAGIATO;
+    }
+
+    public void set_asintomatico()
+    {
+        this.stato_salute = model.Stato_salute.ASINTOMATICO;
+    }
+
+    public void set_morto()
+    {
+        this.stato_salute = model.Stato_salute.MORTO;
+    }
+
+    public void setInMovimento(boolean movimento)
+    {
+        this.movimento = movimento;
+    }
+
+
+    public Stato_salute get_stato_salute()
+    {
+        return this.stato_salute;
+    }
 
     // la letalita e' stata decisa,basandoci sulle fonti provenienti dal sito Source: Chinese Center for Disease Control and Prevention
     protected void set_Letalita(int eta)
@@ -109,48 +158,52 @@ public class Persona
     ///TODO: Aggiungere controllo per vedere se persona e' in movimento
     void Update()
     {
-        if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
+        if (movimento)
         {
-            m_Punto[0] = randInt(10, Window.getWidth() - 15);
-            m_Punto[1] = randInt(10, Window.getHeight() - 15);
-        }
-        if (Math.abs(m_Punto[0] - x_Pos) != 0 && Math.abs(m_Punto[1] - y_Pos) != 0)
-        {
-            if (m_UltimoAsse == true)
+            if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
+            {
+                m_Punto[0] = randInt(10, Window.getWidth() - 15);
+                m_Punto[1] = randInt(10, Window.getHeight() - 15);
+            }
+            if (Math.abs(m_Punto[0] - x_Pos) != 0 && Math.abs(m_Punto[1] - y_Pos) != 0)
+            {
+                if (m_UltimoAsse == true)
+                {
+                    if (m_Punto[0] - x_Pos < 0)
+                        x_Pos = x_Pos - 0.5f;
+                    else
+                        x_Pos = x_Pos + 0.5f;
+
+                    m_UltimoAsse = false;
+                } else
+                {
+                    if (m_Punto[1] - y_Pos < 0)
+                        y_Pos = y_Pos - 0.5f;
+                    else
+                        y_Pos = y_Pos + 0.5f;
+
+                    m_UltimoAsse = true;
+                }
+                return;
+            }
+
+            if ((int) x_Pos != m_Punto[0])
             {
                 if (m_Punto[0] - x_Pos < 0)
                     x_Pos = x_Pos - 0.5f;
                 else
                     x_Pos = x_Pos + 0.5f;
+            }
 
-                m_UltimoAsse = false;
-            } else
+            if ((int) y_Pos != m_Punto[1])
             {
                 if (m_Punto[1] - y_Pos < 0)
                     y_Pos = y_Pos - 0.5f;
                 else
                     y_Pos = y_Pos + 0.5f;
-
-                m_UltimoAsse = true;
             }
-            return;
-        }
-
-        if ((int) x_Pos != m_Punto[0])
-        {
-            if (m_Punto[0] - x_Pos < 0)
-                x_Pos = x_Pos - 0.5f;
-            else
-                x_Pos = x_Pos + 0.5f;
-        }
-
-        if ((int) y_Pos != m_Punto[1])
-        {
-            if (m_Punto[1] - y_Pos < 0)
-                y_Pos = y_Pos - 0.5f;
-            else
-                y_Pos = y_Pos + 0.5f;
         }
     }
 }
+
 

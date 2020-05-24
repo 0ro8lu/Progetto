@@ -68,7 +68,29 @@ public class GestorePopolazione
     public void Infetta()
     {
 
+        int conta_incontri = 0;
+        while (conta_incontri < somma_velocita)
+        {
+            int indice = randInt(0, array_popolazione.size()-1);
+            if (array_popolazione.get(indice).get_stato_salute() == Stato_salute.SANO &&
+                array_popolazione.get(indice).getIsSintomatico()== false)
+            {
+                int infettivita = randInt(10, 70);
+                if ( infettivita > 55)
+                {
+                    if (array_popolazione.get(indice).getSintomaticita() > 55)
+                    {
+                        array_popolazione.get(indice).set_contagiato();
+                        array_popolazione.get(indice).setInMovimento(false);
+
+                    }
+                }
+                conta_incontri++;
+            }
+        }
+
     }
+
 
     public void Update()
     {
