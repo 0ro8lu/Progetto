@@ -53,12 +53,23 @@ public class GestorePopolazione
         EventoNuovoGiorno eventoNuovoGiorno = (EventoNuovoGiorno)evento;
         System.out.println("Giorno " + eventoNuovoGiorno.getDayCount());
 
+        num_asintomatici=0;
+        fattore_contagiosita=0;
         somma_velocita = 0;
         for(Persona persona : array_popolazione)
         {
             if(persona.stato_salute == Stato_salute.ASINTOMATICO)
+            {
+                num_asintomatici++;
                 somma_velocita += persona.getVelocita();
+            }
+            if(persona.stato_salute == Stato_salute.ASINTOMATICO || persona.stato_salute == Stato_salute.CONTAGIATO)
+            {
+                persona.decrementa_durata();
+            }
         }
+        //fattore_contagiosita=somma_velocita/num_asintomatici;
+        //System.out.println(fattore_contagiosita);
 
         System.out.println(somma_velocita);
 
@@ -72,18 +83,20 @@ public class GestorePopolazione
         while (conta_incontri < somma_velocita)
         {
             int indice = randInt(0, array_popolazione.size()-1);
-            if (array_popolazione.get(indice).get_stato_salute() == Stato_salute.SANO &&
-                array_popolazione.get(indice).getIsSintomatico()== false)
+            if (array_popolazione.get(indice).get_stato_salute() == Stato_salute.SANO)
             {
                 int infettivita = randInt(10, 70);
-                if ( infettivita > 55)
+                if ( infettivita > 65)
                 {
-                    if (array_popolazione.get(indice).getSintomaticita() > 55)
+                    if (array_popolazione.get(indice).getSintomaticita() > 52)
                     {
                         array_popolazione.get(indice).set_contagiato();
-                        array_popolazione.get(indice).setInMovimento(false);
-
+                        /// TODO: impostare il non movimento in persona.update
                     }
+                    else{
+                        array_popolazione.get(indice).set_asintomatico();
+                    }
+
                 }
                 conta_incontri++;
             }
@@ -123,5 +136,8 @@ public class GestorePopolazione
     private int num_medici;
     private int num_operai;
     private int num_disoccupati;
-    private int somma_velocita;
+
+    private int somma_velocita;// è dato dalla somma degli incontri delle persone malate e asintomatiche (aggiornato quotidianamente)
+    private int fattore_contagiosita;
+    int num_asintomatici;
 }

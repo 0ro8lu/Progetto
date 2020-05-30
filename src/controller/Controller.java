@@ -18,7 +18,7 @@ public class Controller {
     {
         m_GestoreEventi = new GestoreEventi();
         m_View = new GameView();
-        m_GestorePopolazione = new GestorePopolazione(2000, 5, 1000);
+        m_GestorePopolazione = new GestorePopolazione(1000, 5, 1000);
         Loop();
     }
 

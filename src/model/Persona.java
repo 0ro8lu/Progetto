@@ -20,7 +20,7 @@ public class Persona
     impiego individuo;
     protected int eta = 0;
     protected float letalita = 0;//probabilita' malato sintomatico
-    protected int durata = 0;// numero di giorni tra contagio e guarigione
+    protected int durata = 5;// numero di giorni tra contagio e guarigione
     protected int sintomaticita = 0;//probabilità di sviluppare sintomi
     Stato_salute stato_salute;
     protected int velocita = 0;
@@ -33,14 +33,13 @@ public class Persona
    */
 
     protected boolean vivo = true;
-    protected boolean asintomatico = false;
+    //protected boolean asintomatico = false;
 
 
     protected float x_Pos = 0.0f;
     protected float y_Pos = 0.0f; //posizione della persone
     private int m_Punto[];
     private boolean m_UltimoAsse; //Quando false l'ultimo movimento e' stato fatto sull'asse delle ascisse, altrimenti su quello delle ordinate =D
-    protected boolean movimento = true;
 
     Persona(impiego v)
     {
@@ -87,11 +86,11 @@ public class Persona
         return velocita;
     }
 
-    public boolean getIsSintomatico()
+    /*public boolean getIsSintomatico()
     {
         return asintomatico;
     }
-
+*/
     public int getSintomaticita()
     {
         return sintomaticita;
@@ -122,9 +121,21 @@ public class Persona
         this.stato_salute = model.Stato_salute.MORTO;
     }
 
-    public void setInMovimento(boolean movimento)
+    public void decrementa_durata()
     {
-        this.movimento = movimento;
+        if (stato_salute != Stato_salute.MORTO) {
+            if (durata <= 0) {
+                set_guarito();
+            }
+            else if(letalita>70)
+            {
+                stato_salute=Stato_salute.MORTO;
+            }
+            else
+            {
+                durata--;
+            }
+        }
     }
 
 
@@ -138,19 +149,19 @@ public class Persona
     {
         if (eta <= 50)
         {
-            letalita = (float) 0.3;
+            letalita = randInt(0,100);
         }
         if (eta > 50 && eta <= 70)
         {
-            letalita = (float) 2.5;
+            letalita = randInt(10,100);
         }
         if (eta > 70 && eta <= 80)
         {
-            letalita = (float) 8.0;
+            letalita = randInt(20,100);
         }
         if (eta > 80)
         {
-            letalita = (float) 14.8;
+            letalita = randInt(30,100);
         }
     }
 
@@ -158,7 +169,7 @@ public class Persona
     ///TODO: Aggiungere controllo per vedere se persona e' in movimento
     void Update()
     {
-        if (movimento)
+        if (this.stato_salute == Stato_salute.SANO || this.stato_salute == Stato_salute.ASINTOMATICO)
         {
             if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
             {

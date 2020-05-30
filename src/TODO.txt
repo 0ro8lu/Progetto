@@ -1,3 +1,8 @@
-1- aggiugnere bool rilevato dal tampone
-2- decidere n. tamponi in base alle risorse
-3- meccanismo di infezione
+tamponare e curare i contagiati in base a quante risorse disponiamo
+aggiungere quotidinamente le risorse in base ai "colori"
+se una persona viene curata la sua letalita (possibilità di morire) si abbassa, non si annulla
+
+FATTO:se una persona è malata, durante il periodo di malattia, controllare se muore o diventa GUARITO (quando la durata diventa 0)
+
+scegliere se curare in base alle risorse che si dispongono (? in base all'eta ?)
+se non si viene curati la letalità non scende
