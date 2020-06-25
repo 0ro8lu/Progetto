@@ -1,0 +1,32 @@
+FEATURE: tamponare e curare i contagiati in base a quante risorse disponiamo
+FEATURE: aggiungere quotidinamente le risorse in base ai "colori"
+FEATURE: se una persona viene curata la sua letalita (possibilità di morire) si abbassa, non si annulla
+
+FEATURE: scegliere se curare in base alle risorse che si dispongono (? in base all'eta ?)
+FEATURE: se non si viene curati la letalità non scende
+
+|---------------------------------------------------------------------------------------------------------------------------------|
+
+CONSIGLIO:  se letalita' maggiore di 70 (a.k.a. sei vecchio) invece che morire di sicuro, facciamo un lancio di dadi.
+
+|---------------------------------------------------------------------------------------------------------------------------------|
+
+ERRORE: Con alta popolazione l'asintomatico guarisce.
+
+|---------------------------------------------------------------------------------------------------------------------------------|
+
+FATTO:se una persona è malata, durante il periodo di malattia, controllare se muore o diventa GUARITO (quando la durata diventa 0)
+FATTO: I pallini blu non riprendono a muoversi.
+
+|---------------------------------------------------------------------------------------------------------------------------------|
+
+Strategie:
+1:  curi tutti.
+2:  cura solo giovani.
+3:  cura solo vecchi.
+4:  non curare nessuno.
+
+|---------------------------------------------------------------------------------------------------------------------------------|
+
+Tamponi:
+-test a campione.
