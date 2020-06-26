@@ -20,7 +20,7 @@ public class Persona
     impiego individuo;
     public int eta = 0;
     public float letalita = 0;//probabilita' malato sintomatico
-    protected int durata = 5;// numero di giorni tra contagio e guarigione
+    protected int durata = 14;// numero di giorni tra contagio e guarigione
     protected int sintomaticita = 0;//probabilità di sviluppare sintomi
     Stato_salute stato_salute;
     protected int velocita = 0;
@@ -31,9 +31,9 @@ public class Persona
     3=asintomatici(giallo)
     4=morto(nero)
    */
+    protected boolean tampone=false;
+    protected boolean movimento=true;
 
-    protected boolean vivo = true;
-    //protected boolean asintomatico = false;
 
 
     protected float x_Pos = 0.0f;
@@ -96,30 +96,21 @@ public class Persona
         return sintomaticita;
     }
 
-    public void set_sano()
-    {
-        this.stato_salute = model.Stato_salute.SANO;
-    }
+    public void set_sano() { this.stato_salute = model.Stato_salute.SANO; }
 
-    public void set_guarito()
-    {
-        this.stato_salute = model.Stato_salute.GUARITO;
-    }
+    public void set_guarito() { this.stato_salute = model.Stato_salute.GUARITO;this.movimento=true; }
 
-    public void set_contagiato()
-    {
-        this.stato_salute = model.Stato_salute.CONTAGIATO;
-    }
+    public void set_contagiato() { this.stato_salute = model.Stato_salute.CONTAGIATO;this.movimento=false; }
 
-    public void set_asintomatico()
-    {
-        this.stato_salute = model.Stato_salute.ASINTOMATICO;
-    }
+    public void set_asintomatico() { this.stato_salute = model.Stato_salute.ASINTOMATICO;this.movimento=true; }
 
-    public void set_morto()
-    {
-        this.stato_salute = model.Stato_salute.MORTO;
-    }
+    public void set_morto() { this.stato_salute = model.Stato_salute.MORTO;this.movimento=false; }
+
+    public void set_movimento(boolean t){movimento=t;}
+
+    public void set_tampone(){ this.tampone=true;}
+
+    public boolean get_tampone(){return this.tampone;}
 
     public void decrementa_durata()
     {
@@ -170,7 +161,8 @@ public class Persona
     ///TODO: Aggiungere controllo per vedere se persona e' in movimento
     void Update()
     {
-        if (this.stato_salute == Stato_salute.SANO || this.stato_salute == Stato_salute.ASINTOMATICO || this.stato_salute == Stato_salute.GUARITO)
+        if(movimento)
+        //if (this.stato_salute == Stato_salute.SANO || this.stato_salute == Stato_salute.ASINTOMATICO || this.stato_salute == Stato_salute.GUARITO)
         {
             if ((int) x_Pos == m_Punto[0] && (int) y_Pos == m_Punto[1])
             {

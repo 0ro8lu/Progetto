@@ -3,10 +3,13 @@
 3 FEATURE: Aggiungere gli eventi di fine simulazione.
 4 Rivedere vari TO-DO nel codice, commentarlo e ristrutturare alcune parti: renderlo piu' compatto, chiaro o leggibile.
 5 Grafici, statisctiche e dati vari.
+6 Interfaccia iniziale.
 
 
 |---------------------------------------------------------------------------------------------------------------------------------|
-
+IMPORTANTE:
+-tempo di incubazione
+-algoritmo morti,invertire letalità
 |---------------------------------------------------------------------------------------------------------------------------------|
 
 ERRORE: Con alta popolazione l'asintomatico guarisce.

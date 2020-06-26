@@ -7,6 +7,8 @@ import eventi.IGestoreEventi;
 import eventi.Evento;
 import model.StrategieCure.StrategiaCure;
 import model.StrategieCure.StrategiaCureGiovani;
+import model.StrategieTampone.StrategiaTampone;
+import model.StrategieTampone.StrategiaTamponeCampione;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +25,7 @@ public class GestorePopolazione
 
         this.letalitaVirus = letalitaVirus;
         m_StrategiaCure = new StrategiaCureGiovani(this); ///TODO: Aggiungere logica in modo da cambiare strategia a piacere.
-
+        m_StrategiaTampone=new StrategiaTamponeCampione(this);
         array_popolazione = new ArrayList<>();
 
         this.numero_persone = numero_Persone;
@@ -95,8 +97,11 @@ public class GestorePopolazione
             {
                 m_StrategiaCure.update(persona);
             }
+            // Strategie di tampone
+            m_StrategiaTampone.update(persona);
 
-            if (persona.stato_salute == Stato_salute.ASINTOMATICO)
+             ///TODO aggiungere tampone
+            if (persona.stato_salute == Stato_salute.ASINTOMATICO )
             {
                 contagiati_asintomatici++;
                 num_asintomatici++;
@@ -159,7 +164,7 @@ public class GestorePopolazione
         }
     }
 
-    protected int randInt(int min, int max)
+    public int randInt(int min, int max)
     {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min) + 1) + min;
@@ -173,13 +178,14 @@ public class GestorePopolazione
     }
 
     private StrategiaCure m_StrategiaCure;
+    private StrategiaTampone m_StrategiaTampone;
 
     public static int letalitaVirus;
     private int indice_primo; ///TODO: Vedere di rendere locale.
     public int c_tampone;
     public int risorse;
     private int numero_persone;
-    ArrayList<Persona> array_popolazione;
+    public ArrayList<Persona> array_popolazione;
     private int num_medici;
     private int num_operai;
     private int num_disoccupati;
