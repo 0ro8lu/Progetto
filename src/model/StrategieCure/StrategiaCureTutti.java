@@ -1,5 +1,7 @@
 package model.StrategieCure;
 
+import controller.Controller;
+import eventi.EventoFineRisorse;
 import model.GestorePopolazione;
 import model.Persona;
 
@@ -20,7 +22,8 @@ public class StrategiaCureTutti extends StrategiaCure
         }
         else
         {
-            ///TODO: Lancia evento fine simulazione di tipo FineRisorse.
+            EventoFineRisorse evento = new EventoFineRisorse();
+            Controller.m_GestoreEventi.AttivaEvento(evento);
         }
     }
 }
