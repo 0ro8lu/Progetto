@@ -1,13 +1,15 @@
-FEATURE: Invertire letalità e sintomaticità (probabilmente un sacco di altri valori)
-FEATURE: Aggiungere classe contenitore per tutte le variabili da modificare.
-FEATURE: Aggiungere una variabile per gestire le strategie.
+1 FEATURE: tamponare contagiati in base a quante risorse disponiamo
+2 FEATURE: fare in modo che i sintomatici siano visibili solo dopo il tampone, fermarli quando li si ha individuati.
+3 FEATURE: Aggiungere gli eventi di fine simulazione.
 4 Rivedere vari TO-DO nel codice, commentarlo e ristrutturare alcune parti: renderlo piu' compatto, chiaro o leggibile.
 5 Grafici, statisctiche e dati vari.
 6 Interfaccia iniziale.
 
 
 |---------------------------------------------------------------------------------------------------------------------------------|
-
+IMPORTANTE:
+-tempo di incubazione
+-algoritmo morti,invertire letalità
 |---------------------------------------------------------------------------------------------------------------------------------|
 
 ERRORE: Con alta popolazione l'asintomatico guarisce.
@@ -20,13 +22,6 @@ FATTO: Strategia di cura.
 FATTO: aggiungere quotidinamente le risorse in base ai "colori"
 FATTO: se una persona viene curata la sua letalita (possibilità di morire) si abbassa, non si annulla
 FATTO: scegliere se curare in base alle risorse che si dispongono (? in base all'eta ?)
-FATTO: tamponare contagiati
-FATTO: fare in modo che i sintomatici siano visibili solo dopo il tampone, fermarli quando li si ha individuati.
-FATTO: Aggiungere gli eventi di fine simulazione.
-FATTO: Rivedere la formula della malattia nel PDF e adattarla alla nostra simulazione.
-FATTO: Aggiungere tempo di incubazione.
-FATTO: Strategia ferma metà popolazione.
-FATTO: Spostare il randInt nella sua classe apposita.
 
 |---------------------------------------------------------------------------------------------------------------------------------|
 

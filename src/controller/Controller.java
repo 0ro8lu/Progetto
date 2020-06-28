@@ -7,11 +7,6 @@ import model.GestorePopolazione;
 import view.*;
 import eventi.GestoreEventi;
 
-enum Scenario
-{
-    FINE_RISORSE, MALATTIA_SCONFITTA, MALATTIA_TAKEOVER
-}
-
 public class Controller {
 
     public Controller()
@@ -22,31 +17,9 @@ public class Controller {
     public void Start()
     {
         m_GestoreEventi = new GestoreEventi();
-
-        m_GestoreEventi.AggiungiDelegato(this::StopDelegate, 2); // Evento fine risorse
-        m_GestoreEventi.AggiungiDelegato(this::StopDelegate, 3); // Evento malattia sconfitta
-        m_GestoreEventi.AggiungiDelegato(this::StopDelegate, 4); // Evento malattia sopravvento
-
         m_View = new GameView();
-        m_GestorePopolazione = new GestorePopolazione(5000, 50, 2000000, 40);
+        m_GestorePopolazione = new GestorePopolazione(5000, 50, 1000000, 5);
         Loop();
-    }
-
-    private void StopDelegate(Evento evt)
-    {
-        Stop();
-
-        switch ((int) evt.GetType())
-        {
-            case 2 -> m_Scenario = Scenario.FINE_RISORSE;
-            case 3 -> m_Scenario = Scenario.MALATTIA_SCONFITTA;
-            case 4 -> m_Scenario = Scenario.MALATTIA_TAKEOVER;
-        }
-    }
-
-    public void Stop()
-    {
-        m_Stop = true;
     }
 
     public void Loop()
@@ -57,11 +30,8 @@ public class Controller {
         int tickCount = 0;
         int dayCount = 0;
 
-        while(!m_Stop)
+        while(true)
         {
-            int TICKPERDAY = 300;
-            double UPS = 1000 / 90;
-
             double current = System.currentTimeMillis();
             double elapsed = current - previous;
             previous = current;
@@ -86,15 +56,6 @@ public class Controller {
             m_GestorePopolazione.Disegna();
             m_View.Draw();
         }
-
-        ///TODO: sostituisci enum scenario con una stringa
-        System.out.print("Simulazione finita per ");
-        switch (m_Scenario)
-        {
-            case FINE_RISORSE       -> System.out.println("fine risorse");
-            case MALATTIA_SCONFITTA -> System.out.println("malattia sconfitta");
-            case MALATTIA_TAKEOVER  -> System.out.println("malattia takeover");
-        }
     }
 
     // Enra x Sleepermane - getaway
@@ -103,7 +64,6 @@ public class Controller {
     private GestorePopolazione m_GestorePopolazione;
     public static GestoreEventi m_GestoreEventi;
     private final double FPS = 1000/60;
-
-    private boolean  m_Stop = false;
-    private Scenario m_Scenario;
+    private final double UPS = 1000/90;
+    private final int TICKPERDAY = 300; //TODO: rimettere a 1000
 }

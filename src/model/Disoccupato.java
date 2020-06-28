@@ -5,7 +5,7 @@ public class Disoccupato extends Persona {
     {
         super(impiego.DISOCCUPATO);
 
-        eta = RandomUtil.randInt(1, 100);
+        eta = super.randInt(1, 100);
         super.set_Letalita(eta);
         velocita = 5;
     }

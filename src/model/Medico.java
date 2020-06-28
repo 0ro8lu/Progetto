@@ -6,7 +6,7 @@ public class Medico extends Persona {
     {
         super(impiego.MEDICO);
 
-        eta = RandomUtil.randInt(35, 65);
+        eta = super.randInt(35, 65);
         super.set_Letalita(eta);
         velocita = 20;
     }

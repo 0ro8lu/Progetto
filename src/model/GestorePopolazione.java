@@ -1,13 +1,12 @@
 package model;
 
 import controller.Controller;
-import eventi.*;
+import eventi.EventoDisegna;
+import eventi.EventoNuovoGiorno;
+import eventi.IGestoreEventi;
+import eventi.Evento;
 import model.StrategieCure.StrategiaCure;
 import model.StrategieCure.StrategiaCureGiovani;
-import model.StrategieCure.StrategiaCureNessuno;
-import model.StrategieCure.StrategiaCureTutti;
-import model.StrategieTampone.StrategiaFermaPopolazione;
-import model.StrategieTampone.StrategiaNessunTampone;
 import model.StrategieTampone.StrategiaTampone;
 import model.StrategieTampone.StrategiaTamponeCampione;
 
@@ -19,9 +18,14 @@ public class GestorePopolazione
 
     public GestorePopolazione(int numero_Persone, int costo_Tampone, int numero_Risorse, int letalitaVirus)
     {
-        IGestoreEventi.Get().AggiungiDelegato(this::DayUpdate, 1);
+        IGestoreEventi.Get().AggiungiDelegato(evt ->
+        {
+            DayUpdate(evt);
+        }, 1);
 
-        GestorePopolazione.letalitaVirus = letalitaVirus;
+        this.letalitaVirus = letalitaVirus;
+        m_StrategiaCure = new StrategiaCureGiovani(this); ///TODO: Aggiungere logica in modo da cambiare strategia a piacere.
+        m_StrategiaTampone=new StrategiaTamponeCampione(this);
         array_popolazione = new ArrayList<>();
 
         this.numero_persone = numero_Persone;
@@ -29,14 +33,11 @@ public class GestorePopolazione
         this.risorse = numero_Risorse;
 
         suddividiPopolazione(numero_persone);
-
-        m_StrategiaCure = new StrategiaCureNessuno(this); ///TODO: Aggiungere logica in modo da cambiare strategia a piacere.
-        m_StrategiaTampone=new StrategiaFermaPopolazione(this);
     }
 
     void suddividiPopolazione(int numero_pop)
     {
-        num_medici = (numero_pop / 100);
+        num_medici = (numero_pop / 100) * 1;
         num_operai = (numero_pop / 100) * 40;
         num_disoccupati = (numero_pop / 100) * 59;
         System.out.println("ho creato " + num_medici + " medici");
@@ -55,9 +56,8 @@ public class GestorePopolazione
         {
             array_popolazione.add(new Disoccupato());
         }
-        ///TODO: Vedere di rendere locale.
-        int indice_primo = RandomUtil.randInt(0, array_popolazione.size() - 1);
-        array_popolazione.get(indice_primo).stato_salute = Stato_salute.ASINTOMATICO;
+        indice_primo = randInt(0, array_popolazione.size() - 1);
+        array_popolazione.get(indice_primo).set_asintomatico();
 
         for (Persona persona : array_popolazione)
         {
@@ -72,18 +72,18 @@ public class GestorePopolazione
         System.out.println();
         EventoNuovoGiorno eventoNuovoGiorno = (EventoNuovoGiorno) evento;
         System.out.println("Giorno " + eventoNuovoGiorno.getDayCount());
-        int sani = 0;
-        int contagiati_asintomatici = 0;
-        int contagiati_sintomatici = 0;
-        int contagiati_non_rilevati = 0;
-        int morti = 0;
-        int guariti = 0;
+        sani = 0;
+        contagiati_asintomatici = 0;
+        contagiati_sintomatici = 0;
+        morti = 0;
+        guariti = 0;
 
+        num_asintomatici = 0;
         fattore_contagiosita = 0;
         somma_velocita = 0;
 
-        // Aumento le risorse nel loop in base al movimento, e non più in base a questa somma.
-        //risorse += numero_persone - (morti + contagiati_sintomatici);
+        // YAY =D =P =) -.-" :') .-.
+        risorse += numero_persone - (morti + contagiati_sintomatici);
 
         for (Persona persona : array_popolazione)
         {
@@ -97,56 +97,28 @@ public class GestorePopolazione
             {
                 m_StrategiaCure.update(persona);
             }
-            //Strategie di tampone
+            // Strategie di tampone
             m_StrategiaTampone.update(persona);
 
-            if (persona.stato_salute == Stato_salute.ASINTOMATICO && persona.get_tampone())
+             ///TODO aggiungere tampone
+            if (persona.stato_salute == Stato_salute.ASINTOMATICO )
             {
                 contagiati_asintomatici++;
+                num_asintomatici++;
                 somma_velocita += persona.getVelocita();
             }
-            else if(persona.stato_salute == Stato_salute.ASINTOMATICO && !persona.get_tampone())
+
+            if (persona.stato_salute == Stato_salute.ASINTOMATICO || persona.stato_salute == Stato_salute.CONTAGIATO)
             {
-                somma_velocita += persona.getVelocita();
-                contagiati_non_rilevati++;
+                persona.decrementa_durata();
             }
-
-            persona.decrementa_durata();
-
-            ///TODO: Parlare ai ragazzi del fatto che nel PDF sta scritto che ogni persona consuma una unità di risorse al giorno.
-            // Se uno non è morto consuma risorse
-            if(persona.stato_salute != Stato_salute.MORTO)
-                risorse--;
-
-            if(persona.movimento)
-                risorse++;
         }
-
-        if(contagiati_non_rilevati == 0 && contagiati_sintomatici == 0)
-        {
-            EventoMalattiaSconfitta evt = new EventoMalattiaSconfitta();
-            Controller.m_GestoreEventi.AttivaEvento(evt);
-        }
-
-        if(morti == numero_persone)
-        {
-            EventoMalattiaSopravvento evt = new EventoMalattiaSopravvento();
-            Controller.m_GestoreEventi.AttivaEvento(evt);
-        }
-
-        if(risorse <= 0)
-        {
-            EventoFineRisorse evt = new EventoFineRisorse();
-            Controller.m_GestoreEventi.AttivaEvento(evt);
-        }
-
         //fattore_contagiosita=somma_velocita/num_asintomatici;
         //System.out.println(fattore_contagiosita);
 
         System.out.println("morti " + morti);
         System.out.println("sani " + sani);
         System.out.println("contagiati asintomatici " + contagiati_asintomatici);
-        System.out.println("contagiati asintomatici non rilevati " + contagiati_non_rilevati);
         System.out.println("contagiati sintomatici " + contagiati_sintomatici);
         System.out.println("guariti " + guariti);
         System.out.println("somma velocita " + somma_velocita);
@@ -161,21 +133,21 @@ public class GestorePopolazione
         int conta_incontri = 0;
         while (conta_incontri < somma_velocita)
         {
-            int indice = RandomUtil.randInt(0, array_popolazione.size() - 1);
+            int indice = randInt(0, array_popolazione.size() - 1);
             if (array_popolazione.get(indice).get_stato_salute() == Stato_salute.SANO)
             {
-                ///TODO: Discutere di questo valore: perchè tra 10 e 70 e non tra 0 e 100 e poi aggiustare il valore "threshold" in basso?
-                int infettivita = RandomUtil.randInt(10, 70);
-                if (infettivita > 20) //Vecchio valore 65
+                int infettivita = randInt(10, 70);
+                if (infettivita > 55) //Vecchio valore 65
                 {
-                    ///TODO: Anche questo valore è da immettere nella classe delle variabili della simulazione.
                     if (array_popolazione.get(indice).getSintomaticita() > 65) //Vecchio valore = 52
                     {
                         array_popolazione.get(indice).set_contagiato();
+                        /// TODO: impostare il non movimento in persona.update
                     } else
                     {
                         array_popolazione.get(indice).set_asintomatico();
                     }
+
                 }
             }
             conta_incontri++;
@@ -186,8 +158,17 @@ public class GestorePopolazione
     {
         for (Persona persona : array_popolazione)
         {
+            ///TODO: Maybe implement this inside each different person, and have them do different things based on their job.
             persona.Update();
+            ///TODO: Maybe implement a check for dead people and remove them from the list, or we renderer the person's update method null.
         }
+    }
+
+    public int randInt(int min, int max)
+    {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
     }
 
     public void Disegna()
@@ -200,9 +181,10 @@ public class GestorePopolazione
     private StrategiaTampone m_StrategiaTampone;
 
     public static int letalitaVirus;
+    private int indice_primo; ///TODO: Vedere di rendere locale.
     public int c_tampone;
     public int risorse;
-    public int numero_persone;
+    private int numero_persone;
     public ArrayList<Persona> array_popolazione;
     private int num_medici;
     private int num_operai;
@@ -211,4 +193,10 @@ public class GestorePopolazione
     private int somma_velocita;// è dato dalla somma degli incontri delle persone malate e asintomatiche (aggiornato quotidianamente)
     private int fattore_contagiosita;
     private int num_asintomatici;
+
+    private int sani = numero_persone;
+    private int contagiati_asintomatici;
+    private int contagiati_sintomatici;
+    private int morti;
+    private int guariti;
 }

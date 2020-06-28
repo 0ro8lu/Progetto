@@ -5,7 +5,7 @@ public class Operaio extends Persona {
     {
         super(impiego.OPERAIO);
 
-        eta = RandomUtil.randInt(18, 63);
+        eta = super.randInt(18, 63);
         super.set_Letalita(eta);
         velocita = 15;
     }
