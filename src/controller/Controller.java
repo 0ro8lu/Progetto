@@ -14,13 +14,13 @@ enum Scenario
 
 public class Controller {
 
-    public Controller()
-    {
-        Start();
-    }
+    public Controller() { Start(); }
 
     public void Start()
     {
+
+        m_InterfacciaMenu = new InterfacciaMenu();
+
         m_GestoreEventi = new GestoreEventi();
 
         m_GestoreEventi.AggiungiDelegato(this::StopDelegate, 2); // Evento fine risorse
@@ -28,7 +28,7 @@ public class Controller {
         m_GestoreEventi.AggiungiDelegato(this::StopDelegate, 4); // Evento malattia sopravvento
 
         m_View = new GameView();
-        m_GestorePopolazione = new GestorePopolazione(5000, 50, 2000000, 40);
+        m_GestorePopolazione = new GestorePopolazione();
         Loop();
     }
 
@@ -106,4 +106,6 @@ public class Controller {
 
     private boolean  m_Stop = false;
     private Scenario m_Scenario;
+
+    private InterfacciaMenu m_InterfacciaMenu;
 }

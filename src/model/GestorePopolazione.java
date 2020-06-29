@@ -2,36 +2,43 @@ package model;
 
 import controller.Controller;
 import eventi.*;
-import model.StrategieCure.StrategiaCure;
-import model.StrategieCure.StrategiaCureGiovani;
-import model.StrategieCure.StrategiaCureNessuno;
-import model.StrategieCure.StrategiaCureTutti;
+import model.StrategieCure.*;
 import model.StrategieTampone.StrategiaFermaPopolazione;
 import model.StrategieTampone.StrategiaNessunTampone;
 import model.StrategieTampone.StrategiaTampone;
 import model.StrategieTampone.StrategiaTamponeCampione;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GestorePopolazione
 {
 
-    public GestorePopolazione(int numero_Persone, int costo_Tampone, int numero_Risorse, int letalitaVirus)
+    public GestorePopolazione()
     {
         IGestoreEventi.Get().AggiungiDelegato(this::DayUpdate, 1);
 
-        GestorePopolazione.letalitaVirus = letalitaVirus;
         array_popolazione = new ArrayList<>();
 
-        this.numero_persone = numero_Persone;
-        this.c_tampone = costo_Tampone;
-        this.risorse = numero_Risorse;
+        this.numero_persone = VariabiliSimulazione.numeroPersone;
+        this.c_tampone = VariabiliSimulazione.costoTampone;
+        this.risorse = VariabiliSimulazione.numeroRisorse;
 
         suddividiPopolazione(numero_persone);
 
-        m_StrategiaCure = new StrategiaCureNessuno(this); ///TODO: Aggiungere logica in modo da cambiare strategia a piacere.
-        m_StrategiaTampone=new StrategiaFermaPopolazione(this);
+        switch (VariabiliSimulazione.strategiaCureID)
+        {
+            case 0 -> m_StrategiaCure = new StrategiaCureTutti(this);
+            case 1 -> m_StrategiaCure = new StrategiaCureGiovani(this);
+            case 2 -> m_StrategiaCure = new StrategiaCureAnziani(this);
+            case 3 -> m_StrategiaCure = new StrategiaCureNessuno(this);
+        }
+
+        switch (VariabiliSimulazione.strategiaTamponeID)
+        {
+            case 0 -> m_StrategiaTampone = new StrategiaTamponeCampione(this);
+            case 1 -> m_StrategiaTampone = new StrategiaNessunTampone(this);
+            case 2 -> m_StrategiaTampone = new StrategiaFermaPopolazione(this);
+        }
     }
 
     void suddividiPopolazione(int numero_pop)
@@ -95,6 +102,7 @@ public class GestorePopolazione
             //Strategie di cura.
             if(persona.stato_salute == Stato_salute.CONTAGIATO)
             {
+                m_StrategiaTampone.attiva();
                 m_StrategiaCure.update(persona);
             }
             //Strategie di tampone
@@ -113,7 +121,6 @@ public class GestorePopolazione
 
             persona.decrementa_durata();
 
-            ///TODO: Parlare ai ragazzi del fatto che nel PDF sta scritto che ogni persona consuma una unità di risorse al giorno.
             // Se uno non è morto consuma risorse
             if(persona.stato_salute != Stato_salute.MORTO)
                 risorse--;
@@ -164,12 +171,11 @@ public class GestorePopolazione
             int indice = RandomUtil.randInt(0, array_popolazione.size() - 1);
             if (array_popolazione.get(indice).get_stato_salute() == Stato_salute.SANO)
             {
-                ///TODO: Discutere di questo valore: perchè tra 10 e 70 e non tra 0 e 100 e poi aggiustare il valore "threshold" in basso?
-                int infettivita = RandomUtil.randInt(10, 70);
-                if (infettivita > 20) //Vecchio valore 65
+                int infettivita = RandomUtil.randInt(0, 100);
+                if (infettivita < VariabiliSimulazione.infettivita) //Vecchia condizione >
                 {
                     ///TODO: Anche questo valore è da immettere nella classe delle variabili della simulazione.
-                    if (array_popolazione.get(indice).getSintomaticita() > 65) //Vecchio valore = 52
+                    if (array_popolazione.get(indice).getSintomaticita() < VariabiliSimulazione.sintomaticita) //Vecchio valore = 52
                     {
                         array_popolazione.get(indice).set_contagiato();
                     } else
@@ -199,7 +205,6 @@ public class GestorePopolazione
     private StrategiaCure m_StrategiaCure;
     private StrategiaTampone m_StrategiaTampone;
 
-    public static int letalitaVirus;
     public int c_tampone;
     public int risorse;
     public int numero_persone;

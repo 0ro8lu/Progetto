@@ -20,9 +20,9 @@ public class Persona
     impiego individuo;
     public int eta = 0;
     public float letalita = 0;//probabilita' malato sintomatico
-    protected int durata = 14;// numero di giorni tra contagio e guarigione
+    protected int durata;// numero di giorni tra contagio e guarigione
     protected int sintomaticita = 0;//probabilità di sviluppare sintomi
-    Stato_salute stato_salute;
+    Stato_salute stato_salute; ///TODO: Togliere questi zero iniziali?
     protected int velocita = 0;
     /* Gli stati sono:
     0=sano(verde)
@@ -45,10 +45,13 @@ public class Persona
 
     Persona(impiego v)
     {
+        durata = VariabiliSimulazione.durata;
+
         this.individuo = v;
 
         stato_salute = model.Stato_salute.SANO;
-        sintomaticita = RandomUtil.randInt(40, 70);
+        //sintomaticita = RandomUtil.randInt(40, 70);
+        sintomaticita = RandomUtil.randInt(0, 100);
 
         x_Pos = (float) RandomUtil.randInt(10, Window.getWidth() - 15);
         y_Pos = (float) RandomUtil.randInt(10, Window.getHeight() - 15);
@@ -77,11 +80,6 @@ public class Persona
         return velocita;
     }
 
-    /*public boolean getIsSintomatico()
-    {
-        return asintomatico;
-    }
-*/
     public int getSintomaticita()
     {
         return sintomaticita;
@@ -221,7 +219,7 @@ public class Persona
                 {
                     set_guarito();
                 }
-                if (letalita > GestorePopolazione.letalitaVirus && stato_salute == Stato_salute.CONTAGIATO)
+                if (letalita < VariabiliSimulazione.letalitaVirus && stato_salute == Stato_salute.CONTAGIATO)
                 {
                     set_morto();
                 }

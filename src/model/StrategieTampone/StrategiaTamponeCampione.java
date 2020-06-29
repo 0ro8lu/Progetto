@@ -17,23 +17,26 @@ public class StrategiaTamponeCampione extends StrategiaTampone
     @Override
     public void update(Persona persona)
     {
-        if (persona.get_stato_salute() != Stato_salute.CONTAGIATO && persona.get_stato_salute() != Stato_salute.MORTO && persona.get_stato_salute() != Stato_salute.GUARITO)
+        if (m_StrategiaAttiva)
         {
-            int valore = RandomUtil.randInt(0, 100);
-            if (valore > 90)
+            if (persona.get_stato_salute() != Stato_salute.CONTAGIATO && persona.get_stato_salute() != Stato_salute.MORTO && persona.get_stato_salute() != Stato_salute.GUARITO)
             {
-                if (m_GestorePopolazione.risorse > m_GestorePopolazione.c_tampone)
+                int valore = RandomUtil.randInt(0, 100);
+                if (valore > 90)
                 {
-                    m_GestorePopolazione.risorse -= m_GestorePopolazione.c_tampone;
-                    if (persona.get_stato_salute() == Stato_salute.ASINTOMATICO)
+                    if (m_GestorePopolazione.risorse > m_GestorePopolazione.c_tampone)
                     {
-                        persona.set_movimento(false);
-                        persona.set_tampone();
+                        m_GestorePopolazione.risorse -= m_GestorePopolazione.c_tampone;
+                        if (persona.get_stato_salute() == Stato_salute.ASINTOMATICO)
+                        {
+                            persona.set_movimento(false);
+                            persona.set_tampone();
+                        }
+                    } else
+                    {
+                        EventoFineRisorse evento = new EventoFineRisorse();
+                        Controller.m_GestoreEventi.AttivaEvento(evento);
                     }
-                } else
-                {
-                    EventoFineRisorse evento = new EventoFineRisorse();
-                    Controller.m_GestoreEventi.AttivaEvento(evento);
                 }
             }
         }

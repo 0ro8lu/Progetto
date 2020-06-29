@@ -1,16 +1,14 @@
-FEATURE: Invertire letalità e sintomaticità (probabilmente un sacco di altri valori)
-FEATURE: Aggiungere classe contenitore per tutte le variabili da modificare.
-FEATURE: Aggiungere una variabile per gestire le strategie.
-4 Rivedere vari TO-DO nel codice, commentarlo e ristrutturare alcune parti: renderlo piu' compatto, chiaro o leggibile.
-5 Grafici, statisctiche e dati vari.
-6 Interfaccia iniziale.
-
+FEATURE: Rivedere vari TO-DO nel codice, commentarlo e ristrutturare alcune parti: renderlo piu' compatto, chiaro o leggibile.
+FEATURE: Grafici, statisctiche e dati vari.
+FEATURE: Interfaccia iniziale.
 
 |---------------------------------------------------------------------------------------------------------------------------------|
 
 |---------------------------------------------------------------------------------------------------------------------------------|
 
 ERRORE: Con alta popolazione l'asintomatico guarisce.
+ERRORE: Con durata 10 al secondo giorno la simulazione finisce per malattia sconfitta.
+(num. persone 2000, costo tampone 50, numRis 20MIL, letalita 10, durata 10).
 
 |---------------------------------------------------------------------------------------------------------------------------------|
 
@@ -27,6 +25,10 @@ FATTO: Rivedere la formula della malattia nel PDF e adattarla alla nostra simula
 FATTO: Aggiungere tempo di incubazione.
 FATTO: Strategia ferma metà popolazione.
 FATTO: Spostare il randInt nella sua classe apposita.
+FATTO: Aggiungere classe contenitore per tutte le variabili da modificare.
+FATTO: Aggiungere una variabile per gestire le strategie.
+FATTO: Invertire letalità e sintomaticità (probabilmente un sacco di altri valori)
+FATTO: Strategia tampone si attiva solo dopo il primo sintomatico.
 
 |---------------------------------------------------------------------------------------------------------------------------------|
 
